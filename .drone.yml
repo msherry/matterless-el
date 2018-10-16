@@ -1,0 +1,6 @@
+pipeline:
+  elisp:
+    image: flycheck/emacs-cask:26.1
+    commands:
+      - cask install
+      - make test
