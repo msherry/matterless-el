@@ -1,7 +1,7 @@
 (source gnu)
 (source melpa)
 
-(package-file "TODO")
+(package "matterless" "0.0.1" "A lightweight Mattermost client")
 
 (development
  (depends-on "f")
