@@ -1,0 +1,49 @@
+* Requirement for org-babel http
+Run the following command to enable org-babel mode HTTP support
+
+#+BEGIN_SRC elisp
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (http . t)))
+#+END_SRC
+* Login
+Let's play around with figuring out how to log into mattermost clients
+
+Looks like if we supply login_id and password we can get an auth token...
+#+NAME: login_id
+#+HEADER: :var login_id=(read-string "Enter mattermost login: ")
+#+HEADER: :cache yes
+#+BEGIN_SRC elisp
+login_id
+#+END_SRC
+
+#+NAME: password
+#+HEADER: :var password=(read-passwd "Enter mattermost password: ")
+#+HEADER: :cache yes
+#+BEGIN_SRC elisp
+password
+#+END_SRC
+
+#+HEADER: :cache yes
+#+NAME: auth_token
+#+BEGIN_SRC http :var login_id=login_id :var password=password :get-header token
+POST https://mattermost.internal.tulip.io/api/v4/users/login
+Content-Type: application/json
+
+{
+    "login_id": "${login_id}",
+    "password": "${password}"
+}
+#+END_SRC
+
+* Get list of MM teams I am in.
+Apparently I must retrieve a team id before I can get a list of channels :(
+Probablly because teams function as a namespace here?
+
+#+NAME: mattermost_teams
+#+HEADER: :var auth_token=auth_token
+#+BEGIN_SRC http :pretty :select ".[] | {if: .id, name: .name}"
+GET https://mattermost.internal.tulip.io/api/v4/users/me/teams
+Authorization: Bearer ${auth_token}
+#+END_SRC
