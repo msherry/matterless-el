@@ -1,9 +1,9 @@
-;;; matterless.el --- MatterMost client for Emacs -*- lexical-binding: t; -*-
+;;; matterless-message-notification.el --- message notifications
 
 ;;; Copyright (C) 2018 Gaelan D'costa
 
 ;;; Author: Gaelan D'costa <gdcosta@gmail.com>
-;;; Created: October 21, 2018
+;;; Created: December 08, 2018
 ;;; Keywords: chat mattermost
 ;;; Homepage: https://github.com/RobotDisco/matterless-el
 
@@ -32,13 +32,12 @@
 ;; to guide me through the wasteland of my own beginnerhood.
 
 ;;; Code:
-(require 'matterless-message-notification)
 
-;;;###autoload
-(defun matterless-start ()
-  "Start the Mattermost chat client."
-  (interactive)
-  (matterless-enable-modeline))
+(defvar matterless-modeline nil)
 
-(provide 'matterless)
-;;; matterless.el ends here
+(defun matterless-enable-modeline ()
+  "Display Matterless information in the modeline."
+  (add-to-list 'global-mode-string '(:eval matterless-modeline) t))
+
+(provide 'matterless-message-notification)
+;;; matterless-message-notification.el ends here
