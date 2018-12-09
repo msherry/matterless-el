@@ -39,5 +39,9 @@
   "Display Matterless information in the modeline."
   (add-to-list 'global-mode-string '(:eval matterless-modeline) t))
 
+;; Local Variables:
+;; lexical-binding: t
+;; End:
+
 (provide 'matterless-message-notification)
 ;;; matterless-message-notification.el ends here
