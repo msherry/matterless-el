@@ -1,4 +1,4 @@
-;;; matterless-message-notification.el --- message notifications
+;;; matterless-message-notification.el --- -*- lexical-binding: t; -*-
 
 ;;; Copyright (C) 2018 Gaelan D'costa
 
@@ -38,10 +38,6 @@
 (defun matterless-enable-modeline ()
   "Display Matterless information in the modeline."
   (add-to-list 'global-mode-string '(:eval matterless-modeline) t))
-
-;; Local Variables:
-;; lexical-binding: t
-;; End:
 
 (provide 'matterless-message-notification)
 ;;; matterless-message-notification.el ends here
