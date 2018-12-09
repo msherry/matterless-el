@@ -1,7 +1,4 @@
 ;;; matterless-util.el --- Matterless helper utils -*- lexical-binding: t; -*-
-
-;;; Copyright (C) 2018 Gaelan D'costa
-
 ;;; Author: Gaelan D'costa <gdcosta@gmail.com>
 ;;; Created: December 8, 2018
 ;;; Keywords: chat mattermost
@@ -32,6 +29,8 @@
 ;; to guide me through the wasteland of my own beginnerhood.
 
 ;;; Code:
+(require 'eieio)
+
 (defun matterless-seq-to-list (seq)
   "Convert SEQ into a proper list if necessary."
   (if (listp seq) seq (append seq nil)))
@@ -39,26 +38,26 @@
 (defun matterless-class-have-slot-p (class slot)
   "Does CLASS have SLOT defined?"
   (and (symbolp slot)
-	   (let* ((stripped (substring (symbol-name slot) 1))
-			  (replaced (replace-regexp-in-string "_" "-"
-												  stripped))
-			  (symbolized (intern replaced)))
-		 (slot-exists-p class symbolized))))
+       (let* ((stripped (substring (symbol-name slot) 1))
+              (replaced (replace-regexp-in-string "_" "-"
+                                                  stripped))
+              (symbolized (intern replaced)))
+         (slot-exists-p class symbolized))))
 
 (defun matterless-collect-slots (class seq)
   "Transform SEQ into slot inputs appropriate for CLASS.
 CLASS is the symbol of the class being instantiated.
 SEQ is a sequence of slot values."
   (let ((plist (matterless-seq-to-list seq)))
-	(cl-loop for p in plist
-			 if (and (matterless-class-have-slot-p class p)
-					 (plist-member plist p))
-			 nconc (let ((value (plist-get plist p)))
-					 (list p (if (stringp value)
-								 (decode-coding-string value 'utf-8)
-							   (if (eq :json-false value)
-								   nil
-								 value)))))))
+    (cl-loop for p in plist
+             if (and (matterless-class-have-slot-p class p)
+                     (plist-member plist p))
+             nconc (let ((value (plist-get plist p)))
+                     (list p (if (stringp value)
+                                 (decode-coding-string value 'utf-8)
+                               (if (eq :json-false value)
+                                   nil
+                                 value)))))))
 
 (provide 'matterless-util)
 ;;; matterless-util.el ends here

@@ -32,12 +32,29 @@
 ;; to guide me through the wasteland of my own beginnerhood.
 
 ;;; Code:
+(require 'cl-lib)
+(require 'matterless-server)
 (require 'matterless-message-notification)
 
 ;;;###autoload
-(defun matterless-start ()
-  "Start the Mattermost chat client."
+(defun matterless-start (&optional server)
+  "Start the Mattermost chat client.
+If SERVER is provided, connect to it.
+Otherwise, connect to all registered servers."
   (interactive)
+  (cl-labels ((start (server)
+                     (when (matterless-server-need-token-p server)
+                       (let ((token (matterless-oauth2-get-token server)))
+                         (oset server token token)
+                         (kill-new token))
+                       (message "Your token is now in the kill ring."))
+                     (matterless-authorize server)))
+    (if server
+        (start server)
+        (if matterless-servers
+         (cl-loop for server in matterless-servers
+                  do (start server))
+       (matterless-start (call-interactively #'matterless-register-server)))))
   (matterless-enable-modeline))
 
 (provide 'matterless)
